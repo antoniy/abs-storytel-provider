@@ -299,46 +299,14 @@ class StorytelProvider {
             return { matches: [] };
         }
     }
-    
-    /**
-    * Gets detailed book information from Storytel API
-    * @param bookId {string|number} The book ID to fetch details for
-    * @param locale {string} Locale for the request
-    * @returns {Promise<*>}
-    */
-    async getBookDetails(bookId, locale) {
-        try {
-            console.log(`getBookDetails: ${bookId}, ${locale}`);
-            // const response = await axios.get(this.baseBookUrl, {
-            //     params: {
-            //         consumableId: bookId,
-            //         request_locale: locale
-            //     },
-            //     headers: {
-            //         'Accept': 'application/json',
-            //         'User-Agent': 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36'
-            //     }
-            // })
-            // .then(res => console.log(res.data))
-            // .catch(err => console.error(err.config));
-            
-            // return response.data;
 
-            // // form-encoded body using built-in URLSearchParams
-            // const params = new URLSearchParams();
-            // params.append("bookId", bookId);
-            // params.append("request_locale", "bg");
-            // const response = await axios.post(this.baseBookUrl, params.toString(), {
-            //     headers: {
-            //         "Content-Type": "application/x-www-form-urlencoded",
-            //         'User-Agent': 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36'
-            //     },
-            //     timeout: 10000,
-            // });
+    async fetchBookInfo(bookId, locale, paramName) {
+        try {
+            console.log(`fetchBookDetails: ${bookId}, ${locale}, ${paramName}`);
             
             const body = new URLSearchParams();
-            body.append("bookId", bookId);
-            body.append("request_locale", "bg");
+            body.append(paramName, bookId);
+            body.append("request_locale", locale);
 
             const response = await fetch(this.baseBookUrl, {
               method: "POST",
@@ -351,21 +319,45 @@ class StorytelProvider {
             });
 
             const text = await response.text(); // debug raw response first
-            console.log("RAW RESPONSE:", text.slice(0, 500));
+            // console.log("RAW RESPONSE:", text.slice(0, 500));
+            const json = JSON.parse(text);
 
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}`);
             }
 
-            return JSON.parse(text);
+            return json;
         } catch (error) {
-            // console.error(`Error fetching book details for ID ${bookId}:`, error.message);
-            // console.error("Axios error:", err.message);
-            // console.error("Status:", err.response?.status);
-            // console.error("Body:", err.response?.data);
-            console.error("Fetch error:", err.message);
+            console.error("Fetch error:", error.message);
             return null;
         }
+    }
+    
+    /**
+    * Gets detailed book information from Storytel API
+    * @param bookId {string|number} The book ID to fetch details for
+    * @param locale {string} Locale for the request
+    * @returns {Promise<*>}
+    */
+    async getBookDetails(bookId, locale) {
+        // 1) Try with bookId
+        let data = await fetchBookInfo(id, locale, "bookId");
+
+        if (data?.result === "success") {
+            return data;
+        }
+
+        console.log(`Retrying with consumableId for ID ${id}...`);
+
+        // 2) Retry with consumableId
+        data = await fetchBookInfo(id, locale, "consumableId");
+
+        if (data?.result === "success") {
+            return data;
+        }
+
+        // 3) Final failure
+        throw new Error( `Storytel API failed for ID ${id}. Result: ${data?.result}`);
     }
 }
 
