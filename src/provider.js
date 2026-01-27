@@ -67,6 +67,7 @@ class StorytelProvider {
      * @returns {{title: (string|string), subtitle: *, author: (string|string), language: (string|string), genres: (*[]|undefined), tags: undefined, series: null, cover: string, duration: (number|undefined), narrator: (*|undefined), description: (string|string), publisher: (string|string), publishedYear: string | undefined, isbn: (string|string)}|null}
      */
     formatBookMetadata(bookData) {
+        console.log(`formatBookMetadata: ${bookData.bookId}`);
         const slb = bookData.slb;
         if (!slb || !slb.book) return null;
 
@@ -75,6 +76,8 @@ class StorytelProvider {
         const ebook = slb.ebook;
 
         if (!abook && !ebook) return null;
+
+        console.log(`formatBookMetadata - all good: ${bookData.bookId}`);
 
         let seriesInfo = null;
         let seriesName = null;
