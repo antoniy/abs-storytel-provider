@@ -244,6 +244,9 @@ class StorytelProvider {
             metadata[key] === undefined && delete metadata[key]
         );
 
+        const debug = JSON.stringify(metadata);
+        console.log(`formatBookMetadata - metadata: ${bookData.bookId}, ${debug}`);
+
         return metadata;
     }
 
