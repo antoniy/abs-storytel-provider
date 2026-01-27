@@ -341,23 +341,23 @@ class StorytelProvider {
     */
     async getBookDetails(bookId, locale) {
         // 1) Try with bookId
-        let data = await this.fetchBookInfo(id, locale, "bookId");
+        let data = await this.fetchBookInfo(bookId, locale, "bookId");
 
         if (data?.result === "success") {
             return data;
         }
 
-        console.log(`Retrying with consumableId for ID ${id}...`);
+        console.log(`Retrying with consumableId for ID ${bookId}...`);
 
         // 2) Retry with consumableId
-        data = await this.fetchBookInfo(id, locale, "consumableId");
+        data = await this.fetchBookInfo(bookId, locale, "consumableId");
 
         if (data?.result === "success") {
             return data;
         }
 
         // 3) Final failure
-        throw new Error( `Storytel API failed for ID ${id}. Result: ${data?.result}`);
+        throw new Error( `Storytel API failed for ID ${bookId}. Result: ${data?.result}`);
     }
 }
 
