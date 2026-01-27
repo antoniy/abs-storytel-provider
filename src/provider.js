@@ -261,6 +261,7 @@ class StorytelProvider {
         if (cachedResult) {
             return cachedResult;
         }
+        console.log(`searchBooks: ${formattedQuery}, ${locale}`);
 
         try {
             const body = new URLSearchParams();
@@ -271,27 +272,27 @@ class StorytelProvider {
               method: "POST",
               headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
-                "User-Agent":
-                  "Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36",
+                "User-Agent": "Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36",
               },
               body: body.toString(),
             });
 
-            // const searchResponse = await axios.get(this.baseSearchUrl, {
-            //     params: {
-            //         request_locale: locale,
-            //         q: formattedQuery
-            //     },
-            //     headers: {
-            //         'User-Agent': 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36'
-            //     }
-            // });
+            const text = await searchResponse.text();
+            let data;
 
-            if (!searchResponse.data || !searchResponse.data.books) {
+            try {
+                data = JSON.parse(text);
+            } catch (e) {
+                console.error("Invalid JSON from Storytel search:", text.slice(0, 200));
                 return { matches: [] };
             }
 
-            const books = searchResponse.data.books.slice(0, 5);
+            // ✅ replicate axios behavior
+            if (!data || !data.books) {
+                return { matches: [] };
+            }
+
+            const books = data.books.slice(0, 10);
             console.log(`Found ${books.length} books in search results`);
 
             const matches = await Promise.all(books.map(async book => {
