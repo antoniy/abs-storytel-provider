@@ -67,7 +67,6 @@ class StorytelProvider {
      * @returns {{title: (string|string), subtitle: *, author: (string|string), language: (string|string), genres: (*[]|undefined), tags: undefined, series: null, cover: string, duration: (number|undefined), narrator: (*|undefined), description: (string|string), publisher: (string|string), publishedYear: string | undefined, isbn: (string|string)}|null}
      */
     formatBookMetadata(bookData) {
-        console.log(`formatBookMetadata: ${bookData.bookId}`);
         const slb = bookData.slb;
         if (!slb || !slb.book) return null;
 
@@ -77,7 +76,6 @@ class StorytelProvider {
 
         if (!abook && !ebook) return null;
 
-        console.log(`formatBookMetadata - all good: ${bookData.bookId}`);
 
         let seriesInfo = null;
         let seriesName = null;
@@ -93,7 +91,6 @@ class StorytelProvider {
 
         let title = book.name;
         let subtitle = null;
-        console.log(`formatBookMetadata - title1: ${bookData.bookId}, ${title}`);
 
         // These patterns match various series and volume indicators across different languages
         // Current Patterns for all Storytel regions
@@ -183,7 +180,6 @@ class StorytelProvider {
         allPatterns.forEach(pattern => {
             title = title.replace(pattern, '');
         });
-        console.log(`formatBookMetadata - title2: ${bookData.bookId}, ${title}`);
 
         if (seriesInfo) {
             subtitle = `${seriesName} ${book.seriesOrder}`;
@@ -194,17 +190,17 @@ class StorytelProvider {
                 const regex = new RegExp(`^(.+?)[-,]\\s*${safeSeriesName}`, 'i');
 
                 const beforeSeriesMatch = title.match(regex);
-                console.log(`Debug1: ${safeSeriesName}, ${beforeSeriesMatch}`);
                 if (beforeSeriesMatch) {
                     title = beforeSeriesMatch[1].trim();
-                    console.log(`Debug2: ${title}`);
                 }
 
-                console.log(`Debug3: ${seriesName}`);
-                title = title.replace(seriesName, '');
+                // only replace title if it's not gonna be empty
+                tmpTitle = title.replace(seriesName, '');
+                if (tmpTitle !== '') {
+                    title = tmpTitle;
+                }
             }
         }
-        console.log(`formatBookMetadata - title3: ${bookData.bookId}, ${title}`);
 
         // Check if there is a subtitle (separated by : or -)
         if (title.includes(':') || title.includes('-')) {
@@ -214,19 +210,16 @@ class StorytelProvider {
                 subtitle = parts[1].trim();
             }
         }
-        console.log(`formatBookMetadata - title4: ${bookData.bookId}, ${title}`);
 
         // Final cleanup of title
         allPatterns.forEach(pattern => {
             title = title.replace(pattern, '');
         });
-        console.log(`formatBookMetadata - title5: ${bookData.bookId}, ${title}`);
 
         title = title.trim();
         if (subtitle) {
             subtitle = subtitle.trim();
         }
-        console.log(`formatBookMetadata - title6: ${bookData.bookId}, ${title}`);
 
         const genres = book.category
             ? this.splitGenre(this.ensureString(book.category.title))
