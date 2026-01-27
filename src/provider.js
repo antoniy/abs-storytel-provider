@@ -341,7 +341,7 @@ class StorytelProvider {
     */
     async getBookDetails(bookId, locale) {
         // 1) Try with bookId
-        let data = await fetchBookInfo(id, locale, "bookId");
+        let data = await this.fetchBookInfo(id, locale, "bookId");
 
         if (data?.result === "success") {
             return data;
@@ -350,7 +350,7 @@ class StorytelProvider {
         console.log(`Retrying with consumableId for ID ${id}...`);
 
         // 2) Retry with consumableId
-        data = await fetchBookInfo(id, locale, "consumableId");
+        data = await this.fetchBookInfo(id, locale, "consumableId");
 
         if (data?.result === "success") {
             return data;
