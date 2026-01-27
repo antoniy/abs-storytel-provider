@@ -267,7 +267,7 @@ class StorytelProvider {
             body.append("q", formattedQuery);
             body.append("request_locale", locale);
 
-            const response = await fetch(this.baseSearchUrl, {
+            const searchResponse = await fetch(this.baseSearchUrl, {
               method: "POST",
               headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
