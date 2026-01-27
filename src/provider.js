@@ -195,7 +195,7 @@ class StorytelProvider {
                 }
 
                 // only replace title if it's not gonna be empty
-                tmpTitle = title.replace(seriesName, '');
+                let tmpTitle = title.replace(seriesName, '');
                 if (tmpTitle !== '') {
                     title = tmpTitle;
                 }
