@@ -308,7 +308,7 @@ class StorytelProvider {
     */
     async getBookDetails(bookId, locale) {
         try {
-            console.info(`getBookDetails: ${bookId}, ${locale}`);
+            console.log(`getBookDetails: ${bookId}, ${locale}`);
             const response = await axios.get(this.baseBookUrl, {
                 params: {
                     consumableId: bookId,
