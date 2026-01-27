@@ -194,10 +194,13 @@ class StorytelProvider {
                 const regex = new RegExp(`^(.+?)[-,]\\s*${safeSeriesName}`, 'i');
 
                 const beforeSeriesMatch = title.match(regex);
+                console.log(`Debug1: ${safeSeriesName}, ${beforeSeriesMatch}`);
                 if (beforeSeriesMatch) {
                     title = beforeSeriesMatch[1].trim();
+                    console.log(`Debug2: ${title}`);
                 }
 
+                console.log(`Debug3: ${seriesName}`);
                 title = title.replace(seriesName, '');
             }
         }
@@ -304,7 +307,7 @@ class StorytelProvider {
                 return { matches: [] };
             }
 
-            const books = data.books.slice(0, 20);
+            const books = data.books.slice(0, 10);
             console.log(`Found ${books.length} books in search results`);
 
             const matches = await Promise.all(books.map(async book => {
