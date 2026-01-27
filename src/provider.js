@@ -332,9 +332,9 @@ class StorytelProvider {
                     'User-Agent': 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36'
                 },
                 timeout: 10000,
-            })
-            .then(res => console.log(res.data))
-            .catch(err => console.error(err.config));
+            });
+            // .then(res => console.log(res.data))
+            // .catch(err => console.error(err.config));
             
             return response.data;
         } catch (error) {
