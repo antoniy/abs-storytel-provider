@@ -292,7 +292,7 @@ class StorytelProvider {
                 return { matches: [] };
             }
 
-            const books = data.books.slice(0, 10);
+            const books = data.books.slice(0, 20);
             console.log(`Found ${books.length} books in search results`);
 
             const matches = await Promise.all(books.map(async book => {
