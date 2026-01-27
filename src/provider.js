@@ -321,27 +321,49 @@ class StorytelProvider {
             // })
             // .then(res => console.log(res.data))
             // .catch(err => console.error(err.config));
-
-            // form-encoded body using built-in URLSearchParams
-            const params = new URLSearchParams();
-            params.append("bookId", bookId);
-            params.append("request_locale", "bg");
-            const response = await axios.post(this.baseBookUrl, params.toString(), {
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    'User-Agent': 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36'
-                },
-                timeout: 10000,
-            });
-            // .then(res => console.log(res.data))
-            // .catch(err => console.error(err.config));
             
-            return response.data;
+            // return response.data;
+
+            // // form-encoded body using built-in URLSearchParams
+            // const params = new URLSearchParams();
+            // params.append("bookId", bookId);
+            // params.append("request_locale", "bg");
+            // const response = await axios.post(this.baseBookUrl, params.toString(), {
+            //     headers: {
+            //         "Content-Type": "application/x-www-form-urlencoded",
+            //         'User-Agent': 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36'
+            //     },
+            //     timeout: 10000,
+            // });
+            
+            const body = new URLSearchParams();
+            body.append("bookId", bookId);
+            body.append("request_locale", "bg");
+
+            const response = await fetch(url, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "User-Agent":
+                  "Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36",
+              },
+              body: body.toString(),
+            });
+
+            const text = await response.text(); // debug raw response first
+            console.log("RAW RESPONSE:", text.slice(0, 500));
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            return JSON.parse(text);
         } catch (error) {
-            console.error(`Error fetching book details for ID ${bookId}:`, error.message);
-            console.error("Axios error:", err.message);
-            console.error("Status:", err.response?.status);
-            console.error("Body:", err.response?.data);
+            // console.error(`Error fetching book details for ID ${bookId}:`, error.message);
+            // console.error("Axios error:", err.message);
+            // console.error("Status:", err.response?.status);
+            // console.error("Body:", err.response?.data);
+            console.error("Fetch error:", err.message);
             return null;
         }
     }
