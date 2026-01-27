@@ -1,4 +1,3 @@
-const axios = require('axios');
 const NodeCache = require('node-cache');
 
 const cache = new NodeCache({
@@ -264,15 +263,29 @@ class StorytelProvider {
         }
 
         try {
-            const searchResponse = await axios.get(this.baseSearchUrl, {
-                params: {
-                    request_locale: locale,
-                    q: formattedQuery
-                },
-                headers: {
-                    'User-Agent': 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36'
-                }
+            const body = new URLSearchParams();
+            body.append("q", formattedQuery);
+            body.append("request_locale", locale);
+
+            const response = await fetch(this.baseSearchUrl, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "User-Agent":
+                  "Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36",
+              },
+              body: body.toString(),
             });
+
+            // const searchResponse = await axios.get(this.baseSearchUrl, {
+            //     params: {
+            //         request_locale: locale,
+            //         q: formattedQuery
+            //     },
+            //     headers: {
+            //         'User-Agent': 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36'
+            //     }
+            // });
 
             if (!searchResponse.data || !searchResponse.data.books) {
                 return { matches: [] };
