@@ -340,7 +340,7 @@ class StorytelProvider {
             body.append("bookId", bookId);
             body.append("request_locale", "bg");
 
-            const response = await fetch(url, {
+            const response = await fetch(this.baseBookUrl, {
               method: "POST",
               headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
