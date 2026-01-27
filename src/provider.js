@@ -309,16 +309,28 @@ class StorytelProvider {
     async getBookDetails(bookId, locale) {
         try {
             console.log(`getBookDetails: ${bookId}, ${locale}`);
-            const response = await axios.get(this.baseBookUrl, {
-                params: {
+            // const response = await axios.get(this.baseBookUrl, {
+            //     params: {
+            //         consumableId: bookId,
+            //         request_locale: locale
+            //     },
+            //     headers: {
+            //         'Accept': 'application/json',
+            //         'User-Agent': 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36'
+            //     }
+            // })
+            // .then(res => console.log(res.data))
+            // .catch(err => console.error(err.config));
+            const response = await axios.post(this.baseBookUrl,
+                qs.stringify({
                     consumableId: bookId,
-                    request_locale: locale
-                },
+                    request_locale: "bg",
+                }),
                 headers: {
-                    'Accept': 'application/json',
+                    "Content-Type": "application/x-www-form-urlencoded",
                     'User-Agent': 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36'
                 }
-            })
+            )
             .then(res => console.log(res.data))
             .catch(err => console.error(err.config));
             
