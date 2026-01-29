@@ -91,6 +91,7 @@ class StorytelProvider {
 
         let title = book.name;
         let subtitle = null;
+        console.log(`formatBookMetadata, title=${title}, nr=1`);
 
         // These patterns match various series and volume indicators across different languages
         // Current Patterns for all Storytel regions
@@ -180,6 +181,7 @@ class StorytelProvider {
         allPatterns.forEach(pattern => {
             title = title.replace(pattern, '');
         });
+        console.log(`formatBookMetadata, title=${title}, nr=2`);
 
         if (seriesInfo) {
             subtitle = `${seriesName} ${book.seriesOrder}`;
@@ -201,6 +203,7 @@ class StorytelProvider {
                 }
             }
         }
+        console.log(`formatBookMetadata, title=${title}, nr=3`);
 
         // Check if there is a subtitle (separated by : or -)
         if (title.includes(':') || title.includes('-')) {
@@ -210,6 +213,7 @@ class StorytelProvider {
                 subtitle = parts[1].trim();
             }
         }
+        console.log(`formatBookMetadata, title=${title}, nr=4`);
 
         // Final cleanup of title
         allPatterns.forEach(pattern => {
@@ -220,6 +224,7 @@ class StorytelProvider {
         if (subtitle) {
             subtitle = subtitle.trim();
         }
+        console.log(`formatBookMetadata, title=${title}, nr=5`);
 
         const genres = book.category
             ? this.splitGenre(this.ensureString(book.category.title))
@@ -281,7 +286,6 @@ class StorytelProvider {
             const bookDetails = await this.getBookDetails(bookId, locale);
             if (!bookDetails) {
                 console.error(`Couldn't find book details for bookId: ${bookId}`);
-                // return { matches: [] };
             } else {
                 const bookMetadata = this.formatBookMetadata(bookDetails);
                 return { matches: [bookMetadata] }
