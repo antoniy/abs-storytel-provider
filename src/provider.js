@@ -275,7 +275,7 @@ class StorytelProvider {
         }
 
         // Try fetching the book details directly if the author is formatted as book ID
-        if (isDigits(author)) {
+        if (this.isDigits(author)) {
             console.log(`Book ID detected in author field. Using that: ${author}`);
             const bookId = Number(author);
             const bookDetails = await this.getBookDetails(bookId, locale);
