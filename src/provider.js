@@ -252,6 +252,10 @@ class StorytelProvider {
         return metadata;
     }
 
+    isDigits(str) {
+        return typeof str === "string" && /^[0-9]+$/.test(str);
+    }
+
     /**
      * Searches for books in the Storytel API
      * @param query {string} Search query
@@ -269,6 +273,21 @@ class StorytelProvider {
         if (cachedResult) {
             return cachedResult;
         }
+
+        // Try fetching the book details directly if the author is formatted as book ID
+        if (isDigits(author)) {
+            console.log(`Book ID detected in author field. Using that: ${author}`);
+            const bookId = Number(author);
+            const bookDetails = await this.getBookDetails(bookId, locale);
+            if (!bookDetails) {
+                console.error(`Couldn't find book details for bookId: ${bookId}`);
+                // return { matches: [] };
+            } else {
+                const bookMetadata = this.formatBookMetadata(bookDetails);
+                return { matches: [bookMetadata] }
+            }
+        }
+
         console.log(`searchBooks: ${formattedQuery}, ${locale}`);
 
         try {
