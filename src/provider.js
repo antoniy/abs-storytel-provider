@@ -91,7 +91,6 @@ class StorytelProvider {
 
         let title = book.name;
         let subtitle = null;
-        console.log(`formatBookMetadata, title=${title}, nr=1`);
 
         // These patterns match various series and volume indicators across different languages
         // Current Patterns for all Storytel regions
@@ -181,7 +180,7 @@ class StorytelProvider {
         allPatterns.forEach(pattern => {
             title = title.replace(pattern, '');
         });
-        console.log(`formatBookMetadata, title=${title}, nr=2`);
+        console.log(`formatBookMetadata, title=${title}, nr=1`);
 
         if (seriesInfo) {
             subtitle = `${seriesName} ${book.seriesOrder}`;
@@ -195,6 +194,7 @@ class StorytelProvider {
                 if (beforeSeriesMatch) {
                     title = beforeSeriesMatch[1].trim();
                 }
+                console.log(`formatBookMetadata, title=${title}, safeSeriesName=${safeSeriesName}, beforeSeriesMatch=${beforeSeriesMatch}, nr=2`);
 
                 // only replace title if it's not gonna be empty
                 let tmpTitle = title.replace(seriesName, '');
@@ -213,7 +213,6 @@ class StorytelProvider {
                 subtitle = parts[1].trim();
             }
         }
-        console.log(`formatBookMetadata, title=${title}, nr=4`);
 
         // Final cleanup of title
         allPatterns.forEach(pattern => {
@@ -224,7 +223,6 @@ class StorytelProvider {
         if (subtitle) {
             subtitle = subtitle.trim();
         }
-        console.log(`formatBookMetadata, title=${title}, nr=5`);
 
         const genres = book.category
             ? this.splitGenre(this.ensureString(book.category.title))
