@@ -180,6 +180,21 @@ class StorytelProvider {
         allPatterns.forEach(pattern => {
             title = title.replace(pattern, '');
         });
+
+        // Check if there is a subtitle (separated by : or -)
+        if (title.includes(':') || title.includes('-')) {
+            const parts = title.split(/[:\-]/);
+            if (parts[1] && parts[1].trim().length >= 3) {
+                title = parts[0].trim();
+                subtitle = parts[1].trim();
+            }
+        }
+
+        // Final cleanup of title
+        allPatterns.forEach(pattern => {
+            title = title.replace(pattern, '');
+        });
+
         console.log(`formatBookMetadata, title=${title}, nr=1`);
 
         if (seriesInfo) {
@@ -205,19 +220,19 @@ class StorytelProvider {
         }
         console.log(`formatBookMetadata, title=${title}, nr=3`);
 
-        // Check if there is a subtitle (separated by : or -)
-        if (title.includes(':') || title.includes('-')) {
-            const parts = title.split(/[:\-]/);
-            if (parts[1] && parts[1].trim().length >= 3) {
-                title = parts[0].trim();
-                subtitle = parts[1].trim();
-            }
-        }
+        // // Check if there is a subtitle (separated by : or -)
+        // if (title.includes(':') || title.includes('-')) {
+        //     const parts = title.split(/[:\-]/);
+        //     if (parts[1] && parts[1].trim().length >= 3) {
+        //         title = parts[0].trim();
+        //         subtitle = parts[1].trim();
+        //     }
+        // }
 
-        // Final cleanup of title
-        allPatterns.forEach(pattern => {
-            title = title.replace(pattern, '');
-        });
+        // // Final cleanup of title
+        // allPatterns.forEach(pattern => {
+        //     title = title.replace(pattern, '');
+        // });
 
         title = title.trim();
         if (subtitle) {
